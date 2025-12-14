@@ -26,7 +26,7 @@ public class CartTest extends BaseTest {
         CartPage cartPage = new CartPage(driver);
 
         // Cart page assertions
-        Assert.assertTrue(cartPage.isCartTitleDisplayed(), "Cart გვერდი არ გაიხსნა");
+        Assert.assertTrue(cartPage.isCartTitleDisplayed(), "Cart გვერდზე არ ვართ Checkout-ზე დაკლიკების შემდეგ");
 
         Assert.assertEquals(
                 cartPage.getCartItemsCount(),

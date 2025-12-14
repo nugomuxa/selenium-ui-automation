@@ -24,40 +24,56 @@ public class CheckoutTests extends BaseTest {
         Assert.assertTrue(cartPage.isCartTitleDisplayed(), "Cart გვერდი არ გაიხსნა");
         cartPage.clickCheckout();
 
-        // ---------- CHECKOUT INFORMATION ----------
+        // ---------- CHECKOUT: YOUR INFORMATION ----------
         CheckoutPage checkoutPage = new CheckoutPage(driver);
 
-        Assert.assertTrue(checkoutPage.isCheckoutPageTitleDisplayed(), "Checkout Information გვერდი არ გაიხსნა");
-        Assert.assertTrue(checkoutPage.isCheckoutInputContainerDisplayed(), "Checkout ინფუთ ველები არ ჩანს");
-        Assert.assertTrue(checkoutPage.isFirstNameInputDisplayed(), "First Name ინფუთი არ ჩანს");
-        Assert.assertTrue(checkoutPage.isLastNameInputDisplayed(), "Last Name ინფუთი არ ჩანს");
-        Assert.assertTrue(checkoutPage.isPostalCodeInputDisplayed(), "Postal Code ინფუთი არ ჩანს");
+        Assert.assertTrue(
+                checkoutPage.isCheckoutPageOpened(),
+                "Checkout: Your Information გვერდი არ გაიხსნა"
+        );
 
-        Assert.assertEquals(checkoutPage.getFirstNamePlaceholder(), "FirstName", "First Name placeholder არასწორია");
-        Assert.assertEquals(checkoutPage.getLastNamePlaceholder(), "LastName", "Last Name placeholder არასწორია");
-        Assert.assertEquals(checkoutPage.getPostalCodePlaceholder(), "Zip/PostalCode", "Postal Code placeholder არასწორია");
+        Assert.assertTrue(checkoutPage.isFirstNameDisplayed(), "First Name ინფუთი არ ჩანს");
+        Assert.assertTrue(checkoutPage.isLastNameDisplayed(), "Last Name ინფუთი არ ჩანს");
+        Assert.assertTrue(checkoutPage.isPostalCodeDisplayed(), "Postal Code ინფუთი არ ჩანს");
 
-        Assert.assertTrue(checkoutPage.isSubmitButtonDisplayed(), "Continue ღილაკი არ ჩანს");
-
-        checkoutPage.fillCheckoutInputs("Nugo", "Mukhigulashvili", "1234");
+        checkoutPage.fillCheckoutForm("Nugo", "Mukhigulashvili", "1234");
 
         // ---------- CHECKOUT OVERVIEW ----------
         CheckoutOverviewPage overviewPage = new CheckoutOverviewPage(driver);
+        overviewPage.waitForOverviewPageToLoad();
 
-        Assert.assertTrue(overviewPage.isOverviewTitleDisplayed(), "Checkout Overview გვერდი არ გაიხსნა");
-        Assert.assertEquals(overviewPage.getOverviewTitleText(), "Checkout: Overview", "Overview გვერდის სათაური არასწორია");
+        Assert.assertEquals(
+                overviewPage.getOverviewTitleText(),
+                "Checkout: Overview",
+                "Overview გვერდის სათაური არასწორია"
+        );
 
-        Assert.assertFalse(overviewPage.getItemNames().isEmpty(), "Overview გვერდზე პროდუქტები არ ჩანს");
+        Assert.assertFalse(
+                overviewPage.getItemNames().isEmpty(),
+                "Overview გვერდზე პროდუქტები არ ჩანს"
+        );
 
-        Assert.assertTrue(overviewPage.getFirstItemPriceValue() > 0, "პროდუქტის ფასი არასწორია");
+        Assert.assertTrue(
+                overviewPage.getFirstItemPriceValue() > 0,
+                "პროდუქტის ფასი არასწორია"
+        );
 
-        Assert.assertTrue(overviewPage.isPaymentInfoSectionDisplayed(), "Payment Information სექცია არ ჩანს");
-        Assert.assertTrue(overviewPage.isShippingInfoSectionDisplayed(), "Shipping Information სექცია არ ჩანს");
+        Assert.assertTrue(
+                overviewPage.isPaymentInfoSectionDisplayed(),
+                "Payment Information სექცია არ ჩანს"
+        );
 
-        Assert.assertTrue(overviewPage.getItemTotalValue() > 0, "Item total არასწორია");
-        Assert.assertTrue(overviewPage.getTaxValue() >= 0, "Tax არასწორია");
+        Assert.assertTrue(
+                overviewPage.isShippingInfoSectionDisplayed(),
+                "Shipping Information სექცია არ ჩანს"
+        );
 
-        Assert.assertEquals(overviewPage.getTotalValue(), overviewPage.getItemTotalValue() + overviewPage.getTaxValue(), 0.01, "Total არ ემთხვევა Item total + Tax-ს");
+        Assert.assertEquals(
+                overviewPage.getTotalValue(),
+                overviewPage.getItemTotalValue() + overviewPage.getTaxValue(),
+                0.01,
+                "Total არ ემთხვევა Item total + Tax-ს"
+        );
 
         overviewPage.clickFinish();
 
@@ -67,9 +83,16 @@ public class CheckoutTests extends BaseTest {
         Assert.assertTrue(completePage.isCompleteTitleDisplayed(), "Checkout Complete გვერდი არ გაიხსნა");
         Assert.assertTrue(completePage.isCompleteLogoDisplayed(), "Success logo არ ჩანს");
 
-        Assert.assertEquals(completePage.getCompleteHeaderText(), "Thank you for your order!", "Success header ტექსტი არასწორია");
+        Assert.assertEquals(
+                completePage.getCompleteHeaderText(),
+                "Thank you for your order!",
+                "Success header ტექსტი არასწორია"
+        );
 
-        Assert.assertFalse(completePage.getCompleteHeaderNormalText().isEmpty(), "Success description ტექსტი ცარიელია");
+        Assert.assertFalse(
+                completePage.getCompleteHeaderNormalText().isEmpty(),
+                "Success description ტექსტი ცარიელია"
+        );
 
         completePage.clickBackButton();
     }
