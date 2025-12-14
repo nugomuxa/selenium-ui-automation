@@ -23,7 +23,7 @@ public class ProductsPage {
     //Constructor
     public ProductsPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     //Assertions
