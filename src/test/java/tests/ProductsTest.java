@@ -32,10 +32,12 @@ public class ProductsTest extends BaseTest {
         //Add to cart
         productsPage.addFirstProductToCart();
 
+
         Assert.assertTrue(
-                productsPage.isCartBadgeDisplayed(),
+                productsPage.waitForCartBadge(),
                 "Cart badge არ გამოჩნდა პროდუქტის დამატების შემდეგ"
         );
+
 
     }
 

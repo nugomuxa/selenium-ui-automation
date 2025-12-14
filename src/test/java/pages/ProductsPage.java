@@ -39,10 +39,12 @@ public class ProductsPage {
         ).size();
     }
 
-    public boolean isCartBadgeDisplayed() {
-        return wait.until(
-                ExpectedConditions.visibilityOfElementLocated(cartBadge)
-        ).isDisplayed();
+    public boolean waitForCartBadge() {
+        return wait.until(driver ->
+                driver.findElements(cartBadge).size() > 0
+        );
+
+
     }
 
     // Actions
