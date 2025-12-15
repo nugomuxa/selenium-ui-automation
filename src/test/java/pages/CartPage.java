@@ -52,5 +52,7 @@ public class CartPage {
         wait.until(
                 ExpectedConditions.elementToBeClickable(checkoutButton)
         ).click();
+        wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
+
     }
 }

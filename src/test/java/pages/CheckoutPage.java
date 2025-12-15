@@ -45,9 +45,16 @@ public class CheckoutPage {
     }
 
     public void fillCheckoutForm(String firstName, String lastName, String postalCode) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput)).sendKeys(firstName);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(lastNameInput)).sendKeys(lastName);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(postalCodeInput)).sendKeys(postalCode);
+        wait.until(ExpectedConditions.elementToBeClickable(firstNameInput)).clear();
+        driver.findElement(firstNameInput).sendKeys(firstName);
+
+        wait.until(ExpectedConditions.elementToBeClickable(lastNameInput)).clear();
+        driver.findElement(lastNameInput).sendKeys(lastName);
+
+        wait.until(ExpectedConditions.elementToBeClickable(postalCodeInput)).clear();
+        driver.findElement(postalCodeInput).sendKeys(postalCode);
+
         wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
     }
+
 }
