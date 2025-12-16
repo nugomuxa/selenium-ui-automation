@@ -1,7 +1,9 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,34 +14,52 @@ public class CheckoutCompletePage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By pageTitle = By.className("title");
-    private final By successLogo = By.className("pony_express");
-    private final By headerText = By.className("complete-header");
-    private final By descriptionText = By.className("complete-text");
-    private final By backHomeButton = By.id("back-to-products");
+    // Page elements
+    @FindBy(className = "title")
+    private WebElement pageTitle;
+
+    @FindBy(className = "pony_express")
+    private WebElement successLogo;
+
+    @FindBy(className = "complete-header")
+    private WebElement headerText;
+
+    @FindBy(className = "complete-text")
+    private WebElement descriptionText;
+
+    @FindBy(id = "back-to-products")
+    private WebElement backHomeButton;
 
     public CheckoutCompletePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
     }
 
+    // Assertions
     public boolean isCompleteTitleDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
+        return pageTitle.isDisplayed();
     }
 
     public boolean isCompleteLogoDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(successLogo)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(successLogo));
+        return successLogo.isDisplayed();
     }
 
     public String getCompleteHeaderText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(headerText)).getText().trim();
+        wait.until(ExpectedConditions.visibilityOf(headerText));
+        return headerText.getText().trim();
     }
 
-    public String getCompleteHeaderNormalText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(descriptionText)).getText().trim();
+    public String getCompleteDescriptionText() {
+        wait.until(ExpectedConditions.visibilityOf(descriptionText));
+        return descriptionText.getText().trim();
     }
 
+    // Actions
     public void clickBackButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(backHomeButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(backHomeButton));
+        backHomeButton.click();
     }
 }

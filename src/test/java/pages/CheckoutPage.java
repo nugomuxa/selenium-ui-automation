@@ -1,7 +1,9 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,49 +14,64 @@ public class CheckoutPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By pageTitle = By.className("title");
-    private final By firstNameInput = By.id("first-name");
-    private final By lastNameInput = By.id("last-name");
-    private final By postalCodeInput = By.id("postal-code");
-    private final By continueButton = By.id("continue");
+    // WebElements
+    @FindBy(className = "title")
+    private WebElement pageTitle;
+
+    @FindBy(id = "first-name")
+    private WebElement firstNameInput;
+
+    @FindBy(id = "last-name")
+    private WebElement lastNameInput;
+
+    @FindBy(id = "postal-code")
+    private WebElement postalCodeInput;
+
+    @FindBy(id = "continue")
+    private WebElement continueButton;
 
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
     }
 
+    // Assertions
     public boolean isCheckoutPageOpened() {
-        return wait.until(
-                ExpectedConditions.textToBePresentInElementLocated(
-                        pageTitle,
-                        "Checkout: Your Information"
-                )
-        );
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
+        return pageTitle.getText().contains("Checkout: Your Information");
     }
 
     public boolean isFirstNameDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(firstNameInput));
+        return firstNameInput.isDisplayed();
     }
 
     public boolean isLastNameDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(lastNameInput)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(lastNameInput));
+        return lastNameInput.isDisplayed();
     }
 
     public boolean isPostalCodeDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(postalCodeInput)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(postalCodeInput));
+        return postalCodeInput.isDisplayed();
     }
 
+    // Actions
     public void fillCheckoutForm(String firstName, String lastName, String postalCode) {
-        wait.until(ExpectedConditions.elementToBeClickable(firstNameInput)).clear();
-        driver.findElement(firstNameInput).sendKeys(firstName);
+        wait.until(ExpectedConditions.visibilityOf(firstNameInput));
+        firstNameInput.clear();
+        firstNameInput.sendKeys(firstName);
 
-        wait.until(ExpectedConditions.elementToBeClickable(lastNameInput)).clear();
-        driver.findElement(lastNameInput).sendKeys(lastName);
+        wait.until(ExpectedConditions.visibilityOf(lastNameInput));
+        lastNameInput.clear();
+        lastNameInput.sendKeys(lastName);
 
-        wait.until(ExpectedConditions.elementToBeClickable(postalCodeInput)).clear();
-        driver.findElement(postalCodeInput).sendKeys(postalCode);
+        wait.until(ExpectedConditions.visibilityOf(postalCodeInput));
+        postalCodeInput.clear();
+        postalCodeInput.sendKeys(postalCode);
 
-        wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(continueButton));
+        continueButton.click();
     }
-
 }

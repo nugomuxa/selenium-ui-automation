@@ -28,6 +28,6 @@ public class ProductsTest extends BaseTest {
         Assert.assertTrue(productsPage.getProductsCount() > 0);
 
         productsPage.addFirstProductToCart();
-        Assert.assertTrue(productsPage.waitForCartBadge());
+        Assert.assertTrue(productsPage.isCartBadgeDisplayed());
     }
 }

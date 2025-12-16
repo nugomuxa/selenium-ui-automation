@@ -29,6 +29,8 @@ public class CheckoutTests extends BaseTest {
         cartPage.clickCheckout();
 
         CheckoutPage checkoutPage = new CheckoutPage(driver);
+
+        Assert.assertTrue(checkoutPage.isCheckoutPageOpened(), "Checkout page did not open");
         checkoutPage.fillCheckoutForm("Nugo", "Mukhigulashvili", "1234");
 
         CheckoutOverviewPage overviewPage = new CheckoutOverviewPage(driver);

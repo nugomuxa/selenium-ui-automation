@@ -1,8 +1,9 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -15,74 +16,98 @@ public class CheckoutOverviewPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By pageTitle = By.className("title");
-    private final By itemNames = By.className("inventory_item_name");
-    private final By itemPrices = By.className("inventory_item_price");
+    // Page title
+    @FindBy(className = "title")
+    private WebElement pageTitle;
 
-    private final By paymentInfoLabel =
-            By.xpath("//div[contains(@class,'summary_info_label') and contains(text(),'Payment')]");
+    // Items
+    @FindBy(className = "inventory_item_name")
+    private List<WebElement> itemNames;
 
-    private final By shippingInfoLabel =
-            By.xpath("//div[contains(@class,'summary_info_label') and contains(text(),'Shipping')]");
+    @FindBy(className = "inventory_item_price")
+    private List<WebElement> itemPrices;
 
-    private final By itemTotalLabel = By.className("summary_subtotal_label");
-    private final By taxLabel = By.className("summary_tax_label");
-    private final By totalLabel = By.className("summary_total_label");
+    // Summary sections
+    @FindBy(xpath = "//div[contains(@class,'summary_info_label') and contains(text(),'Payment')]")
+    private WebElement paymentInfoLabel;
 
-    private final By finishButton = By.id("finish");
+    @FindBy(xpath = "//div[contains(@class,'summary_info_label') and contains(text(),'Shipping')]")
+    private WebElement shippingInfoLabel;
+
+    @FindBy(className = "summary_subtotal_label")
+    private WebElement itemTotalLabel;
+
+    @FindBy(className = "summary_tax_label")
+    private WebElement taxLabel;
+
+    @FindBy(className = "summary_total_label")
+    private WebElement totalLabel;
+
+    // Actions
+    @FindBy(id = "finish")
+    private WebElement finishButton;
 
     public CheckoutOverviewPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
     }
 
+    // Page load
     public void waitForOverviewPageToLoad() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
+        wait.until(ExpectedConditions.textToBePresentInElement(pageTitle, "Checkout: Overview"));
     }
 
+
+    // Getters / Assertions
     public String getOverviewTitleText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle)).getText().trim();
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
+        return pageTitle.getText().trim();
     }
 
     public List<String> getItemNames() {
-        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(itemNames))
-                .stream()
-                .map(e -> e.getText().trim())
-                .collect(Collectors.toList());
+        wait.until(ExpectedConditions.visibilityOfAllElements(itemNames));
+        return itemNames.stream().map(e -> e.getText().trim()).collect(Collectors.toList());
     }
 
     public double getFirstItemPriceValue() {
-        String priceText = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(itemPrices))
-                .get(0)
-                .getText();
-        return parseMoney(priceText);
+        wait.until(ExpectedConditions.visibilityOfAllElements(itemPrices));
+        return parseMoney(itemPrices.get(0).getText());
     }
 
     public boolean isPaymentInfoSectionDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(paymentInfoLabel)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(paymentInfoLabel));
+        return paymentInfoLabel.isDisplayed();
     }
 
     public boolean isShippingInfoSectionDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(shippingInfoLabel)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(shippingInfoLabel));
+        return shippingInfoLabel.isDisplayed();
     }
 
     public double getItemTotalValue() {
-        return parseMoney(wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel)).getText());
+        wait.until(ExpectedConditions.visibilityOf(itemTotalLabel));
+        return parseMoney(itemTotalLabel.getText());
     }
 
     public double getTaxValue() {
-        return parseMoney(wait.until(ExpectedConditions.visibilityOfElementLocated(taxLabel)).getText());
+        wait.until(ExpectedConditions.visibilityOf(taxLabel));
+        return parseMoney(taxLabel.getText());
     }
 
     public double getTotalValue() {
-        return parseMoney(wait.until(ExpectedConditions.visibilityOfElementLocated(totalLabel)).getText());
+        wait.until(ExpectedConditions.visibilityOf(totalLabel));
+        return parseMoney(totalLabel.getText());
     }
 
+    // Actions
     public void clickFinish() {
-        wait.until(ExpectedConditions.elementToBeClickable(finishButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(finishButton));
+        finishButton.click();
     }
 
+    // Utils
     private double parseMoney(String text) {
         return Double.parseDouble(text.replaceAll("[^0-9.]", ""));
     }

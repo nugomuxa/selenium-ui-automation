@@ -1,58 +1,67 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class CartPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    //Locators
-    private By cartTitle = By.className("title");
-    private By cartItems = By.className("cart_item");
-    private By firstItemName = By.className("inventory_item_name");
-    private By firstItemPrice = By.className("inventory_item_price");
-    private By checkoutButton = By.id("checkout");
+    // Page elements
+    @FindBy(className = "title")
+    private WebElement cartTitle;
+
+    @FindBy(className = "cart_item")
+    private List<WebElement> cartItems;
+
+    @FindBy(className = "inventory_item_name")
+    private List<WebElement> itemNames;
+
+    @FindBy(className = "inventory_item_price")
+    private List<WebElement> itemPrices;
+
+    @FindBy(id = "checkout")
+    private WebElement checkoutButton;
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
     }
 
+    // Assertions
     public boolean isCartTitleDisplayed() {
-        return wait.until(
-                ExpectedConditions.visibilityOfElementLocated(cartTitle)
-        ).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(cartTitle));
+        return cartTitle.isDisplayed();
     }
 
     public int getCartItemsCount() {
-        return wait.until(
-                ExpectedConditions.visibilityOfAllElementsLocatedBy(cartItems)
-        ).size();
+        wait.until(ExpectedConditions.visibilityOfAllElements(cartItems));
+        return cartItems.size();
     }
 
     public String getFirstItemName() {
-        return wait.until(
-                ExpectedConditions.visibilityOfElementLocated(firstItemName)
-        ).getText();
+        wait.until(ExpectedConditions.visibilityOfAllElements(itemNames));
+        return itemNames.get(0).getText().trim();
     }
 
     public String getFirstItemPrice() {
-        return wait.until(
-                ExpectedConditions.visibilityOfElementLocated(firstItemPrice)
-        ).getText();
+        wait.until(ExpectedConditions.visibilityOfAllElements(itemPrices));
+        return itemPrices.get(0).getText().trim();
     }
 
+    // Actions
     public void clickCheckout() {
-        wait.until(
-                ExpectedConditions.elementToBeClickable(checkoutButton)
-        ).click();
+        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton));
+        checkoutButton.click();
         wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
-
     }
 }
